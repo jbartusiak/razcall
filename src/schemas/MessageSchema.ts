@@ -1,18 +1,17 @@
-import mongoose, { Schema } from 'mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
 export type TLogLevel = 'info' | 'debug' | 'warning' | 'error' | 'trace';
 
-export interface Message extends Document {
+interface IMessage extends Document {
     level: TLogLevel;
     message: string;
     time: number;
 }
 
-const MessageSchema: Schema = new Schema<Message>({
+const Message: Schema = new Schema<IMessage>({
     level: {type: String, required: true},
     message: {type: String, required: true},
     time: {type: Number, required: true}
 });
 
-export default mongoose.model('Message', MessageSchema);
+export default mongoose.model<IMessage>('Message', Message);
