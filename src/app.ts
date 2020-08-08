@@ -7,6 +7,7 @@ import { corsOptions } from "./config/cors";
 import healthRouter from "./routes/health";
 import exampleRouter from './routes/exampleRouter';
 import { Eureka } from "eureka-js-client";
+import './config/mongo';
 
 const app = Express();
 
