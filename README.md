@@ -1,9 +1,8 @@
-# Node.js Express Shell
-This is a shell for express apps with typescript
+# razcall-connector
+A simple mongo db logging utility
 
 ## Scripts
 ```
-"start": Builds and serves the app
-"start:dev": Run development env
-"build": Compiles app into an executable
+"build": lint and fix project, build it,
+"lint": lint project,
 ```
