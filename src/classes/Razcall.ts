@@ -13,7 +13,7 @@ export interface RazcallConfig {
 
 let INSTANCE: Razcall;
 
-export const razcall = async (config: RazcallConfig): Promise<Razcall> => {
+export const razcall = (config: RazcallConfig): Razcall => {
     if (!INSTANCE) {
         INSTANCE = new Razcall(config);
     }
