@@ -1,5 +1,6 @@
 import MessageSchema, { ILogMessage, TLogLevel } from "../schemas/LogsSchema";
 import mongoose from 'mongoose';
+import moment, { Moment } from "moment";
 
 export interface RazcallConfig {
     applicationName: string,
@@ -19,8 +20,8 @@ export const razcall = async (config: RazcallConfig): Promise<Razcall> => {
     return INSTANCE;
 };
 
-const formatMessage = (appName: string, message: string, date: Date, level: TLogLevel): string =>
-    `[${ level.toUpperCase() }] (${ appName }) ${ date.toLocaleDateString() }: ${ message }`;
+const formatMessage = (appName: string, message: string, moment: Moment, level: TLogLevel): string =>
+    `[${ level.toUpperCase() }] (${ appName }) ${ moment.format('YYYY-MM-DD HH:mm:ss') }: ${ message }`;
 
 export class Razcall {
     constructor(private config: RazcallConfig) {
@@ -36,13 +37,13 @@ export class Razcall {
                 useUnifiedTopology: true,
             }
         ).then(
-            () => console.log(formatMessage(config.applicationName, 'Connected to DB', new Date(), 'info'))
+            () => console.log(formatMessage(config.applicationName, 'Connected to DB', moment(), 'info'))
         );
     }
 
     private log = (message: string, level: TLogLevel): Promise<ILogMessage> => {
-        const date = new Date();
-        const time = Math.floor(date.getTime() / 1000);
+        const date = moment();
+        const time = moment().unix();
 
         const formattedMessage = formatMessage(this.config.applicationName, message, date, level);
 

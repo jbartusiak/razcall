@@ -1,24 +1,27 @@
 {
   "name": "@bartusiak/razcall-connector",
-  "version": "1.0.0",
-  "description": "This is a shell for express apps with typescript",
+  "version": "0.0.1",
+  "description": "A simple mongo db logging utility",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
-  "homepage": "https://github.com/jbartusiak/express-shell",
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/jbartusiak/razcall-connector",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jbartusiak/express-shell.git"
+    "url": "git+https://github.com/jbartusiak/razcall-connector"
   },
   "scripts": {
+    "build": "eslint src --ext .ts --fix && rimraf ./dist && tsc",
     "lint": "eslint . --ext .ts",
     "prepare": "npm run build",
-    "build": "eslint src --ext .ts --fix && rimraf ./dist && tsc",
     "push": "npm publish --access public"
   },
   "author": "jakub.bartusiak",
   "license": "ISC",
   "dependencies": {
+    "moment": "^2.27.0",
     "mongoose": "^5.9.28"
   },
   "devDependencies": {
@@ -33,6 +36,6 @@
     "typescript": "^3.9.2"
   },
   "bugs": {
-    "url": "https://github.com/jbartusiak/express-shell/issues"
+    "url": "https://github.com/jbartusiak/razcall-connector/issues"
   }
 }
