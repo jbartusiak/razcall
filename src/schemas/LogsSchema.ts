@@ -1,17 +1,17 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export type TLogLevel = 'info' | 'debug' | 'warning' | 'error' | 'trace';
+export type TLogLevel = 'info' | 'debug' | 'warn' | 'error' | 'trace';
 
-interface IMessage extends Document {
+export interface ILogMessage extends Document {
     level: TLogLevel;
     message: string;
     time: number;
 }
 
-const Message: Schema = new Schema<IMessage>({
+const Logs: Schema = new Schema<ILogMessage>({
     level: {type: String, required: true},
     message: {type: String, required: true},
     time: {type: Number, required: true}
 });
 
-export default mongoose.model<IMessage>('Message', Message);
+export default mongoose.model<ILogMessage>('Logs', Logs);

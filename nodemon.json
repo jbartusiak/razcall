@@ -1,6 +1,0 @@
-{
-  "watch": ["src", ".eslintrc"],
-  "ext": ".ts,.js",
-  "ignore": ["node_modules", ".git", "build"],
-  "exec": "npm run lint && ts-node ./src/app.ts"
-}
