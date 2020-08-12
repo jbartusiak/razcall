@@ -1,4 +1,4 @@
-import MessageSchema, { ILogMessage, TLogLevel } from "../schemas/LogsSchema";
+import MessageSchema, { TLogLevel } from "../schemas/LogsSchema";
 import mongoose from 'mongoose';
 import moment, { Moment } from "moment";
 import chalk, { Chalk } from "chalk";
@@ -11,6 +11,7 @@ export interface RazcallConfig {
     dbName: string;
     dbPort: number;
     overwriteConsole: boolean;
+    postLogs: boolean;
 }
 
 let INSTANCE: Razcall;
@@ -50,7 +51,7 @@ export class Razcall {
 
     private establishConnection = (config: RazcallConfig) => {
         const {dbHost, dbPort, dbName} = config;
-        mongoose.connect(
+        config.postLogs && mongoose.connect(
             `mongodb://${ dbHost }:${ dbPort }/${ dbName }`,
             {
                 useNewUrlParser: true,
@@ -71,7 +72,7 @@ export class Razcall {
         console.log('Console taken over by Razcall');
     }
 
-    private log = (message: string, level: TLogLevel): Promise<ILogMessage> => {
+    private log = (message: string, level: TLogLevel): void => {
         const date = moment();
         const time = moment().unix();
 
@@ -84,13 +85,16 @@ export class Razcall {
             level,
             time,
         });
-        return logMessage.save();
+
+        if (this.config.postLogs) {
+            logMessage.save();
+        }
     };
 
-    info = (message: string): Promise<ILogMessage> => this.log(message, 'info');
-    debug = (message: string): Promise<ILogMessage> => this.log(message, 'debug');
-    warning = (message: string): Promise<ILogMessage> => this.log(message, 'warn');
-    error = (message: string): Promise<ILogMessage> => this.log(message, 'error');
-    trace = (message: string): Promise<ILogMessage> => this.log(message, 'trace');
+    info = (message: string): void => this.log(message, 'info');
+    debug = (message: string): void => this.log(message, 'debug');
+    warning = (message: string): void => this.log(message, 'warn');
+    error = (message: string): void => this.log(message, 'error');
+    trace = (message: string): void => this.log(message, 'trace');
     finalize = (): Promise<void> => mongoose.disconnect();
 }
