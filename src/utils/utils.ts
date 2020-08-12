@@ -17,7 +17,8 @@ export const mapping = (level: TLogLevel): Chalk => {
             return chalk.blue;
         case "warn":
             return chalk.yellow;
+        case "log":
         default:
-            return chalk.bgBlack;
+            return chalk.reset;
     }
 }

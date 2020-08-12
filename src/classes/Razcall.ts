@@ -50,7 +50,7 @@ export class Razcall {
 
     private overwriteConsole() {
         console.log('Taking over logging to console');
-        console.log = (...messages: any[]) => messages.length && this.info(messages);
+        console.log = (...messages: any[]) => messages.length && this.default(messages);
         console.info = (...messages: any[]) => messages.length && this.info(messages);
         console.error = (...messages: any[]) => messages.length && this.error(messages);
         console.debug = (...messages: any[]) => messages.length && this.debug(messages);
@@ -84,6 +84,7 @@ export class Razcall {
         }
     };
 
+    default = (items: any[]):void => this.log('log', items);
     info = (items: any[]): void => this.log('info', items);
     debug = (items: any[]): void => this.log('debug', items);
     warning = (items: any[]): void => this.log('warn', items);

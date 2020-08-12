@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export type TLogLevel = 'info' | 'debug' | 'warn' | 'error' | 'trace';
+export type TLogLevel = 'log' | 'info' | 'debug' | 'warn' | 'error' | 'trace';
 
 export interface ILogMessage extends Document {
     level: TLogLevel;

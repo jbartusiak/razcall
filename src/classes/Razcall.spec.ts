@@ -23,6 +23,24 @@ describe('Razcall test suite', () => {
         rascalGlobalConsole = rascal.globalConsole;
     })
 
+    it('should log "log" messages in default color', () => {
+        //given
+        const logMessage = 'Test message to be logged';
+        const consoleSpy = jest.spyOn(rascalGlobalConsole, 'log');
+        const defaultSpy = jest.spyOn(rascal, 'default');
+
+        //when
+        console.log(logMessage);
+
+        //then
+        expect(defaultSpy).toHaveBeenLastCalledWith([ logMessage ]);
+        expect(consoleSpy)
+            .toHaveBeenLastCalledWith(
+                chalk.reset(
+                    formatMessage('test', logMessage, moment(), 'log'))
+            );
+    });
+
     it('should log "info" messages in green', () => {
         //given
         const logMessage = 'Test message to be logged';
@@ -31,20 +49,6 @@ describe('Razcall test suite', () => {
 
         //when
         console.info(logMessage);
-
-        //then
-        expect(infoSpy).toHaveBeenLastCalledWith([ logMessage ]);
-        expect(consoleSpy).toHaveBeenLastCalledWith(chalk.green(formatMessage('test', logMessage, moment(), 'info')));
-    });
-
-    it('should log "log" messages in green', () => {
-        //given
-        const logMessage = 'Test message to be logged';
-        const consoleSpy = jest.spyOn(rascalGlobalConsole, 'info');
-        const infoSpy = jest.spyOn(rascal, 'info');
-
-        //when
-        console.log(logMessage);
 
         //then
         expect(infoSpy).toHaveBeenLastCalledWith([ logMessage ]);
@@ -111,20 +115,20 @@ describe('Razcall test suite', () => {
         //given
         const logMessage = 'Test message to be logged';
         const anotherMessage = 'Another message in the same place';
-        const anObject = { property: 'value' }
-        const consoleSpy = jest.spyOn(rascalGlobalConsole, 'info');
-        const rascalSpy = jest.spyOn(rascal, 'info');
+        const anObject = {property: 'value'}
+        const consoleSpy = jest.spyOn(rascalGlobalConsole, 'log');
+        const defaultSpy = jest.spyOn(rascal, 'default');
 
         //when
         console.log(logMessage, anotherMessage, anObject);
 
         //then
-        expect(rascalSpy).toHaveBeenLastCalledWith([ logMessage, anotherMessage, anObject ]);
+        expect(defaultSpy).toHaveBeenLastCalledWith([ logMessage, anotherMessage, anObject ]);
         expect(consoleSpy)
             .toHaveBeenLastCalledWith(
-                chalk.green(formatMessage('test', logMessage, moment(), 'info')),
+                chalk.reset(formatMessage('test', logMessage, moment(), 'log')),
                 anotherMessage,
-                anObject
+                anObject,
             );
     });
 })
