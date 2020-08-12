@@ -1,7 +1,8 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-import MessageSchema, { TLogLevel } from "../schemas/LogsSchema";
-import mongoose from 'mongoose';
 import moment from "moment";
+import mongoose from 'mongoose';
+
+import MessageSchema, { TLogLevel } from "../schemas/LogsSchema";
 import { formatMessage, mapping } from "../utils/utils";
 
 export interface RazcallConfig {
@@ -44,7 +45,7 @@ export class Razcall {
                 useUnifiedTopology: true,
             }
         ).then(
-            () => console.log(formatMessage(config.applicationName, 'Connected to DB', moment(), 'info'))
+            () => console.log('Connected to DB'),
         );
     }
 
