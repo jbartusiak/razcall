@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import MessageSchema, { TLogLevel } from "../schemas/LogsSchema";
 import mongoose from 'mongoose';
 import moment from "moment";
