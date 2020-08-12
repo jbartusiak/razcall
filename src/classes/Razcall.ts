@@ -1,7 +1,7 @@
 import MessageSchema, { TLogLevel } from "../schemas/LogsSchema";
 import mongoose from 'mongoose';
-import moment, { Moment } from "moment";
-import chalk, { Chalk } from "chalk";
+import moment from "moment";
+import { formatMessage, mapping } from "../utils/utils";
 
 export interface RazcallConfig {
     applicationName: string,
@@ -23,29 +23,14 @@ export const razcall = (config: RazcallConfig): Razcall => {
     return INSTANCE;
 };
 
-const formatMessage = (appName: string, message: string, moment: Moment, level: TLogLevel): string =>
-    `[${ level.toUpperCase() }] (${ appName }) ${ moment.format('YYYY-MM-DD HH:mm:ss') }: ${ message }`;
-
-const mapping = (level: TLogLevel): Chalk => {
-    switch (level) {
-        case "debug":
-            return chalk.cyan;
-        case "error":
-            return chalk.red;
-        case "info":
-            return chalk.green;
-        case "trace":
-            return chalk.blue;
-        case "warn":
-            return chalk.yellow;
-        default:
-            return chalk.bgBlack;
-    }
-}
-
 export class Razcall {
+    private _globalConsole: Console;
+
     constructor(private config: RazcallConfig) {
-        config.overwriteConsole && this.overwriteConsole();
+        this._globalConsole = {...console};
+        if (config.overwriteConsole) {
+            this.overwriteConsole();
+        }
         this.establishConnection(config);
     }
 
@@ -64,22 +49,29 @@ export class Razcall {
 
     private overwriteConsole() {
         console.log('Taking over logging to console');
-        console.log = this.info;
-        console.error = this.error;
-        console.debug = this.debug;
-        console.trace = this.trace;
-        console.warn = this.warning;
-        console.log('Console taken over by Razcall');
+        console.log = (...messages: any[]) => messages.length && this.info(messages);
+        console.info = (...messages: any[]) => messages.length && this.info(messages);
+        console.error = (...messages: any[]) => messages.length && this.error(messages);
+        console.debug = (...messages: any[]) => messages.length && this.debug(messages);
+        console.trace = (...messages: any[]) => messages.length && this.trace(messages);
+        console.warn = (...messages: any[]) => messages.length && this.warning(messages);
+        console.log('Console taken over');
     }
 
-    private log = (message: string, level: TLogLevel): void => {
+    private log = (level: TLogLevel, items: any[]): void => {
+        const [ message, ...rest ] = items;
         const date = moment();
         const time = moment().unix();
 
         const formattedMessage = formatMessage(this.config.applicationName, message, date, level);
 
-        console[level](mapping(level)(formattedMessage));
-
+        const formatter = mapping(level);
+        if (rest.length) {
+            this._globalConsole[level](formatter(formattedMessage), ...rest);
+        }
+        else {
+            this._globalConsole[level](formatter(formattedMessage));
+        }
         const logMessage = new MessageSchema({
             message,
             level,
@@ -91,10 +83,14 @@ export class Razcall {
         }
     };
 
-    info = (message: string): void => this.log(message, 'info');
-    debug = (message: string): void => this.log(message, 'debug');
-    warning = (message: string): void => this.log(message, 'warn');
-    error = (message: string): void => this.log(message, 'error');
-    trace = (message: string): void => this.log(message, 'trace');
+    info = (items: any[]): void => this.log('info', items);
+    debug = (items: any[]): void => this.log('debug', items);
+    warning = (items: any[]): void => this.log('warn', items);
+    error = (items: any[]): void => this.log('error', items);
+    trace = (items: any[]): void => this.log('trace', items);
     finalize = (): Promise<void> => mongoose.disconnect();
+
+    get globalConsole(): Console {
+        return this._globalConsole;
+    }
 }
