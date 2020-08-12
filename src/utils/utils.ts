@@ -10,11 +10,11 @@ export const mapping = (level: TLogLevel): Chalk => {
         case "debug":
             return chalk.cyan;
         case "error":
-            return chalk.red;
+            return chalk.red.bold;
         case "info":
             return chalk.green;
         case "trace":
-            return chalk.blue;
+            return chalk.black.bgRed;
         case "warn":
             return chalk.yellow;
         case "log":

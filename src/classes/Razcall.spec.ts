@@ -66,7 +66,8 @@ describe('Razcall test suite', () => {
 
         //then
         expect(errorSpy).toHaveBeenLastCalledWith([ logMessage ]);
-        expect(consoleSpy).toHaveBeenLastCalledWith(chalk.red(formatMessage('test', logMessage, moment(), 'error')));
+        expect(consoleSpy).toHaveBeenLastCalledWith(
+            chalk.red.bold(formatMessage('test', logMessage, moment(), 'error')));
     });
 
     it('should log "debug" messages in cyan', () => {
@@ -83,7 +84,7 @@ describe('Razcall test suite', () => {
         expect(consoleSpy).toHaveBeenLastCalledWith(chalk.cyan(formatMessage('test', logMessage, moment(), 'debug')));
     });
 
-    it('should log "trace" messages in blue', () => {
+    it('should log "trace" messages in white on red', () => {
         //given
         const logMessage = 'Test message to be logged';
         const consoleSpy = jest.spyOn(rascalGlobalConsole, 'trace');
@@ -94,7 +95,9 @@ describe('Razcall test suite', () => {
 
         //then
         expect(errorSpy).toHaveBeenLastCalledWith([ logMessage ]);
-        expect(consoleSpy).toHaveBeenLastCalledWith(chalk.blue(formatMessage('test', logMessage, moment(), 'trace')));
+        expect(consoleSpy)
+            .toHaveBeenLastCalledWith(
+                chalk.black.bgRed(formatMessage('test', logMessage, moment(), 'trace')));
     });
 
     it('should log "warn" messages in yellow', () => {
